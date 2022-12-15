@@ -1,0 +1,197 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container" style="margin-top:20px">
+
+    <!-- Page header start -->
+    <div class="page-title">
+        <div class="row gutters">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                <h5 class="title">Chat App</h5>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12"> </div>
+        </div>
+    </div>
+    <!-- Page header end -->
+
+    <!-- Content wrapper start -->
+    <div class="content-wrapper" >
+
+        <!-- Row start -->
+        <div class="row gutters">
+
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                <div class="card m-0">
+
+                    <!-- Row start -->
+                    <div class="row no-gutters">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
+                            <div class="users-container">
+                                <div class="chat-search-box">
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-info">
+                                                <i class="fa fa-search" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="users" style="overflow-y: scroll;" id="friend-component" (scroll)="scrollToEnd($event)">
+                                    <li class="person" *ngFor="let friend of friends; index as i" style="display: flex; justify-content: flex-start; position: relative; " (click)="selectFriend(i)">
+                                        <div class="user">
+                                            <img src="{{apiHost+'/'+friend.avatar}}" >
+                                            <span *ngIf="friend.active" class="status busy"></span>
+                                        </div>
+                                        <div>
+                                            <p class="name-time">
+                                                <span class="name">{{friend.name}}</span>
+                                                <br>
+                                                <span class="time">{{friend.account}}</span>
+                                            </p>
+                                        </div>
+                                        <span *ngIf="friend.waiting" style="position: absolute; right:10px; top:10px; background-color: red; color: white; width: 20px; height: 20px; border-radius: 50%; text-align: center; font-size: 13.5px;">
+                                           {{friend.waiting.length}}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+                            <div class="selected-user" style="display: flex; justify-content: space-between;" >
+                                <div>
+                                    <span>To: <span class="name" *ngIf="friend">{{friend.name}}</span></span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div style="position: relative;">
+                                        <button (click)="showNotifies()" style="margin-right:10px" class="btn btn-primary" data-toggle="modal" data-target="#notify"><i class="fa fa-bell" aria-hidden="true"></i></button>
+                                        <span *ngIf="notifies.length>0" style="background-color: red; color: white; width: 22px; height: 22px; border-radius:50%; position: absolute; text-align: center; top: 10px; left: -10px;">{{notifies.length}}</span>
+                                    </div>
+                                    <div style="margin-right: 10px">
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-user-plus" aria-hidden="true"></i></button>
+                                    </div>
+                                    <div style="margin-right: 10px">
+                                        <a href="/profile" class="btn btn-primary" ><i class="fa fa-user" aria-hidden="true"></i></a>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-primary" (click)="logOut()"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="chat-container">
+                                <ul class="chat-box chatContainerScroll"  style="overflow-y: scroll;" id="chat-component"  #scrollMe [scrollTop]="scrollMe.scrollHeight" (scroll)="onScroll($event)">
+                                    <li  *ngFor="let mess of stories" [ngClass]="{'chat-left': mess.sender!=account, 'chat-right': mess.sender==account}">
+                                        <div class="chat-avatar" *ngIf="mess.sender!=account">
+                                            <img src="{{apiHost+'/'+friend.avatar}}" >
+                                            <div class="chat-name">{{mess.sender}}</div>
+                                        </div>
+                                        <div class="chat-text">{{mess.content}}</div>
+                                        <!-- <div class="chat-hour">08:55 <span class="fa fa-check-circle"></span></div> -->
+                                        <div class="chat-avatar" *ngIf="mess.sender==account">
+                                            <img src="{{apiHost+'/'+myself.avatar}}" >
+                                            <div class="chat-name">{{mess.sender}}</div>
+                                        </div>
+                                    </li>
+                                    
+                                </ul>
+                                <div class="form-group mt-3 mb-0" style="display: flex; justify-content: space-between;">
+                                    <form [formGroup]="chatForm" (ngSubmit)="sendMessage()" style="width: 100%; display: flex; justify-content: space-between;" >
+                                        <div style="width:70%">
+                                            <input formControlName="mess" class="form-control" rows="3" placeholder="Type your message here..."/>
+                                        </div>
+                                        <div  style="width:30%">
+                                            <button type="submit" style="float: right;" class="btn btn-primary">send</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row end -->
+                </div>
+
+            </div>
+
+        </div>
+        <!-- Row end -->
+
+    </div>
+    <!-- Content wrapper end -->
+
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add new contact</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form [formGroup]="formFindContact" (ngSubmit)="find()">
+            <div class="modal-body">
+                <div style="display:flex; justify-content: space-between;">
+                    <div style="width: 85%;"><input (input)="findChange()" formControlName="account" width="100%" type="text" class="form-control" placeholder="type account hear..."></div>
+                    <div><button type="submit" class="btn btn-primary">Find</button></div>
+                </div>
+                <div class="result users" style="margin-top: 20px;" *ngIf="founded">
+                    <div class="person" style="display: flex; justify-content: space-between;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div class="user">
+                                <img src="{{user.avatar}}" alt="Retail Admin">
+                                <span *ngIf="user.active" class="status away"></span>
+                            </div>
+                            <div>
+                                <p class="name-time">
+                                    <span class="name">{{user.name}}</span>
+                                    <br>
+                                    <span class="time">{{user.account}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div >
+                            <button *ngIf="isMade" class="btn btn-primary" (click)="makeFriend(user.account)">Add friend</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Make friend</button> -->
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="notify" tabindex="-1" role="dialog" aria-labelledby="notify" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Notifications</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+            <div *ngFor="let noti of notifies; index as i" style="display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: black 0.5px;">
+                <div>
+                    <div><b>{{noti.sender}}</b>: {{noti.content}}</div>
+                    <div>{{noti.create_date | date}}</div>
+                </div>
+                <div>
+                    <button *ngIf="noti.type == 3" class="btn btn-primary" style="margin-right:10px" (click)="accept(i)">Accept</button>
+                    <button  class="btn btn-danger" (click)="deny(i)">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+        
+      </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="container h-100">
+	<div class="row h-100">
+		<div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+			<div class="d-table-cell align-middle">
+
+				<div class="text-center mt-4">
+					<h1 class="h2">Get started</h1>
+					<p class="lead">
+						Start creating a account to chat with friends.
+					</p>
+				</div>
+
+				<div class="card">
+					<div class="card-body">
+						<div class="m-sm-4">
+							<form [formGroup]="signUpForm" (ngSubmit)="submit()">
+								<div class="form-group">
+									<label>Name</label>
+									<input class="form-control form-control-lg" type="text" placeholder="Enter your name" formControlName="name" [(ngModel)]="user.name">
+								</div>
+								<div class="form-group">
+									<label>Account</label>
+									<input class="form-control form-control-lg" type="text" placeholder="Enter your account" formControlName="account" [(ngModel)]="user.account">
+								</div>
+								<div class="form-group">
+									<label>Email</label>
+									<input class="form-control form-control-lg" type="email" placeholder="Enter your email" formControlName="email" [(ngModel)]="user.email">
+								</div>
+								<div class="form-group">
+									<label>Password</label>
+									<input class="form-control form-control-lg" type="password" placeholder="Enter password" formControlName="password" [(ngModel)]="user.password">
+								</div>
+								<div class="text-center mt-3">
+									<button type="submit" [disabled]="!signUpForm.valid" class="btn btn-lg btn-primary">Sign up</button>
+									<!-- <button type="submit" class="btn btn-lg btn-primary">Sign up</button> -->
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
